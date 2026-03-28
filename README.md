@@ -9,6 +9,7 @@
 | Feature | Description                                                 |
 | :--- |:------------------------------------------------------------|
 | Automatic outline | Detects chat and builds an outline.                         |
+| Project support | Also works on ChatGPT Project pages — lists all conversations in the project. |
 | One-click navigation | Click any node to jump to the corresponding message.        |
 | Live sync | Outline updates automatically whenever new messages arrive. |
 | Toggle dropdown | Use the button to show or hide the outline dropdown.        |

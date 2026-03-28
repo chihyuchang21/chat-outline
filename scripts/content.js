@@ -4,6 +4,9 @@ const USER_MESSAGE_TEXT_SELECTORS = [
   '[data-message-author-role="user"] .whitespace-pre-wrap',
   '.whitespace-pre-wrap',
 ];
+const PROJECT_ITEM_SELECTOR = 'div.text-sm.font-medium';
+
+const isProjectPage = () => window.location.pathname.includes('/project');
 
 const getUserQuestionEntries = () => {
   return Array.from(document.querySelectorAll(USER_TURN_SELECTOR))
@@ -14,6 +17,18 @@ const getUserQuestionEntries = () => {
       return {
         turn,
         question: textElement?.textContent?.trim() || '',
+      };
+    })
+    .filter(entry => entry.question);
+};
+
+const getProjectEntries = () => {
+  return Array.from(document.querySelectorAll(PROJECT_ITEM_SELECTOR))
+    .map(el => {
+      const container = el.closest('a') || el.closest('li') || el.parentElement;
+      return {
+        turn: container,
+        question: el.textContent.trim(),
       };
     })
     .filter(entry => entry.question);
@@ -66,7 +81,7 @@ const updateDropdownList = () => {
 
   dropdown.innerHTML = '';
   const list = document.createElement('ul');
-  const questionEntries = getUserQuestionEntries();
+  const questionEntries = isProjectPage() ? getProjectEntries() : getUserQuestionEntries();
   questionEntries.forEach((entry, index) => {
     createListItem(entry.turn, entry.question, index, list);
   });
@@ -232,7 +247,7 @@ history.replaceState = function(...args) {
 
 let prevUserQuestions = [];
 const observer = new MutationObserver(() => {
-  const currentUserQuestions = getUserQuestionEntries().map(entry => entry.question);
+  const currentUserQuestions = (isProjectPage() ? getProjectEntries() : getUserQuestionEntries()).map(entry => entry.question);
   const hasChanged = currentUserQuestions.length !== prevUserQuestions.length ||
     currentUserQuestions.some((q, idx) => q !== prevUserQuestions[idx]);
 
